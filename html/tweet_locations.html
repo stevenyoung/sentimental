@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+    <script>
+      function draw(data) {
+        'use strict';
+        //date format 2013-09-05 23:42:24 : %Y-%m-%d %H:$M:%S
+        var formatDate = d3.time.format('%Y-%m-%d %H:%M:%S'),
+          margin = 50,
+          width = window.innerWidth,
+          height = window.innerHeight;
+
+        var lat_extent = d3.extent(data, function(d) { return d.lat; })
+        var lng_extent = d3.extent(data, function(d) { return d.lng; })
+        // lat_extent ["32.7731", "41.4729"] lng_extent ["-115.503", "-124.025"]
+        // center: 37.123, -119.764
+        // var lat_extent = ["39.7731", "41.4729"]
+        // var lng_extent = ["-122.503", "-124.025"]
+        console.log('lat_extent', lat_extent, 'lng_extent', lng_extent);
+
+        var lat_scale = d3.scale.linear()
+                        .range([margin, width - margin])
+                        .domain(lat_extent);
+
+        var lng_scale = d3.scale.linear()
+                        .range([margin, height - margin])
+                        .domain(lng_extent);
+
+        console.log('lat scale:', lat_scale, ' lng scale:', lng_scale)
+
+        var projection = d3.geo.albersUsa();
+        var path = d3.geo.path()
+                      .projection(projection);
+        var svg = d3.select('#scatter')
+                  .append('svg')
+                  .attr('width', width)
+                  .attr('height', height)
+                  .selectAll('circle')
+                  .data(data)
+                  .enter()
+                  .append('circle')
+                  .on('click', clicked)
+                  .append('svg:g')
+                  .call(d3.behavior.zoom().on("zoom", redraw));
+
+          // var group = svg.append('g');
+
+
+        var circle = d3.selectAll('circle')
+          .attr('r', function(d) {
+            return (Math.abs(parseInt(d.sentiment,10)*3));})
+          .attr('cx', function(d) {
+            return lat_scale(d.lat)})
+          .attr('cy', function(d) {
+            return lng_scale(d.lng)})
+          .attr('style', function(d) {
+            var stylestr = '',
+              sentiment = d.sentiment,
+              sentiment_color = 'rgb(128,128,128)';
+            if (sentiment < 0) {
+              sentiment_color = 'rgb(192,128,128)';
+            }
+            if (sentiment > 0) {
+              sentiment_color = 'rgb(128,128,192)';
+            }
+            stylestr = 'fill:' + sentiment_color + ';stroke-width:1;stroke:rgb(0,0,0)'
+            return stylestr});
+        circle.append('title')
+              .text(function(d) { return d.text});
+
+        function clicked(d) {
+          console.log('clicked', d)
+          var textbox = document.getElementById('tweet');
+          textbox.innerText = d['text'];
+        }
+
+        function redraw() {
+          console.log("here", d3.event.translate, d3.event.scale);
+          svg.attr("transform",
+                    "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")");
+        }
+      }
+    </script>
+</head>
+<body>
+<div id="tweetcontainer"><h2 id="tweet">click to read</tweet></div>
+<div id="scatter"></div>
+</body>
+  <script src="js/d3.v3.min.js"></script>
+  <script src="js/topojson.v1.min.js"></script>
+  <script src="js/time-series-chart.js"></script>
+  <script>
+    d3.csv("csv/stream_sf_clean_sample.csv", draw);
+  </script>
+</html>

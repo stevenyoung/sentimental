@@ -1,0 +1,11 @@
+*.pyc
+*.swp
+*.R*
+.ipynb_checkpoints
+*.sql
+*.csv
+csv/*
+sql/*
+json/*
+ignore/*
+app_settings.py

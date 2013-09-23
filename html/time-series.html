@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/time-series-chart.js"></script>
+</head>
+<body>
+  <div id="tschart"></div>
+  <script>
+    //date format 2013-09-05 23:42:24 : %Y-%m-%d %H:$M:%S
+    var chart = timeSeriesChart()
+                .x(function(d) { return formatDate.parse(d.date)})
+                .y(function(d) { return +d.price}),
+        formatDate = d3.time.format('%Y-%m-%d %H:%M:%S');
+
+      d3.csv("csv/stream_sf.csv", function(data) {
+          d3.select("#tschart")
+            .datum(data)
+            .call(chart);
+      });
+  </script>
+</body>
+
+</html>
