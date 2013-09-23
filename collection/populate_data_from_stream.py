@@ -25,11 +25,9 @@ def main():
         print status['created_at']
         print status['user']['screen_name']
         raise
-        break
       except UnicodeEncodeError:
         print 'oops'
         raise
-        break
 
 
 if __name__ == '__main__':

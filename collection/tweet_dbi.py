@@ -17,12 +17,19 @@ import app_settings
 import sentiment
 
 
-class Hashtags(object):
-  def __init__(self, table='stream_sf_hashtags'):
+class BaseModel(object):
+  def __init__(self):
     self.db_engine = create_engine(app_settings.db_engine())
-    metadata = MetaData(self.db_engine)
+    self.metadata = MetaData(self.db_engine)
+
+  def connection(self):
+    return self.db_engine.connect()
+
+
+class Hashtags(BaseModel):
+  def __init__(self, table='stream_sf_hashtags'):
     super(Hashtags, self).__init__()
-    self.hashtags = Table(table, metadata, autoload=True)
+    self.hashtags = Table(table, self.metadata, autoload=True)
 
   def do_insert(self, hashtag, status_id, db_connxn):
     db_connxn.execute(self.hashtags.insert(),
@@ -33,16 +40,10 @@ class Hashtags(object):
                       )
 
 
-class StreamData(object):
-
+class StreamData(BaseModel):
   def __init__(self, table='stream_sf'):
-    self.db_engine = create_engine(app_settings.db_engine())
-    metadata = MetaData(self.db_engine)
     super(StreamData, self).__init__()
-    self.tweets = Table(table, metadata, autoload=True)
-
-  def connection(self):
-    return self.db_engine.connect()
+    self.tweets = Table(table, self.metadata, autoload=True)
 
   def format_geo_coords(self, geo):
     if str(geo).startswith('[['):
@@ -87,6 +88,7 @@ class StreamData(object):
     loc = self.format_geo_coords(geo)
     score = sentiment.score_sentiment(text)
     tweet_sentiment = score['positive matches'] - score['negative matches']
+    hashtag_count = len(status_msg['entities']['hashtags'])
 
     db_connxn.execute(self.tweets.insert(), text=text, lang=lang, status_id=status_id,
                       created=created, reply_to=reply_to,
@@ -112,7 +114,8 @@ class StreamData(object):
                       box_ne=loc['box_ne'],
                       box_nw=loc['box_nw'],
                       lat=loc['lat'],
-                      lng=loc['lng'])
+                      lng=loc['lng'],
+                      hashtag_count=hashtag_count)
 
 
 class Tweet(object):
