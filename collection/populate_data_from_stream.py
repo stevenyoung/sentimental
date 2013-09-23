@@ -6,15 +6,18 @@ import tweet_stream
 
 
 def main():
-  data = tweet_dbi.StreamData(table='stream_sf')
-  db_connxn = data.connection()
-  stream = tweet_stream.get_stream('sf')
+  streamdata = tweet_dbi.StreamData(table='stream_sf_dev')
+  db_connxn = streamdata.connection()
+  stream = tweet_stream.Stream().get_stream('sf')
+  hashtags = tweet_dbi.Hashtags(table='stream_sf_hashtags')
 
   for status in stream:
     if status.get('lang'):
       try:
         status['text'] = status['text'].replace('\n', ' ')
-        data.do_insert(status, db_connxn)
+        streamdata.do_insert(status, db_connxn)
+        for tag in status['entities']['hashtags']:
+          hashtags.do_insert(tag, status['id'], db_connxn)
       except ValueError:
         print status['text']
         print status['lang']
