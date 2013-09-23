@@ -4,7 +4,7 @@ from nltk.corpus import stopwords
 
 def get_positive_words():
   f = open(path.join(path.expanduser('~'),
-           'sentimental/lexicons/positive-words.txt'))
+           'lexicons/positive-words.txt'))
   words = []
   for line in f:
     if not line.startswith(';'):
@@ -15,7 +15,7 @@ def get_positive_words():
 
 def get_negative_words():
   f = open(path.join(path.expanduser('~'),
-           'sentimental/lexicons/negative-words.txt'))
+           'lexicons/negative-words.txt'))
   words = []
   for line in f:
     if not line.startswith(';'):
