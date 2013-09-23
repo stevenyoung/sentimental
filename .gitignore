@@ -2,6 +2,7 @@
 *.swp
 *.R*
 .ipynb_checkpoints
+sentimental.ipynb
 *.sql
 *.csv
 csv/*
