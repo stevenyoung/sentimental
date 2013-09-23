@@ -1,30 +1,38 @@
-data extraction notes:
-  don't worry about weirdness in raw data, unavoidable
-  collect data however possible
-  then use r or pandas for etl, either saving to rdata or python pickle objects
+/collection contains python scripts used to retrieve and store status messages
+/exploration
+/html contains D3 visualizations
+/lexicons are the lexicons used in this version.
+(lexicons courtesy of http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html)
 
 
-data analysis:
-  baseline comparison
-  confusion matrix
-  make sure you discuss
-  precision, recall
+**Can a collective 'mood' be determined by the features available in the Twitter-verse?**
 
+Collect status messages from Twitter's firehose and see.
 
-  unigram vectorization
-  CountVectorizer
+How to measure sentiment?
+Started with a very simple hypothesis:
+  Count 'nice' words and 'mean' words in a tweet and score the tweet.
 
+Data Extraction
+===============
 
-francesco recommends pandas hdfs
+Tweets are collected via Twitter's Stream API and stored to a database.
+Tweets are filtered by geo-located tweets inside a box bounded by latitude, longitude to include much of Northern California
+Collected about 400,000 status messages over the first ten days in September 2013.
 
-marie: chp has collision data
+Data Exploration
+================
+Trial and error, various approaches to deal with things like unconventional text in status messages, languages, etc.
+Other irregularities: Location reported in various ways.
 
-# read tweets from storage
-# tokenize tweets
-# delete stop words
-# for each remaining word define TF.IDF
+Features
+========
+Can features besides content (latitude, longitude, user status counts, user followers, user friends) be used to determine 'sentiment' score?
 
-# models
-# cross-validate
-# regularize
+Data Analysis
+=============
+Used a combination of features.
+Inputs of location (latitude, longitude, user status counts, user followers, user friends)
+Tried these estimators DecisionTrees, RandomTrees, ExtraTrees to predict this 'sentiment'
+
 

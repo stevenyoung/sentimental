@@ -9,3 +9,4 @@ sql/*
 json/*
 ignore/*
 app_settings.py
+todo.md
