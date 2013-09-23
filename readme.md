@@ -1,4 +1,4 @@
-**/collection** contains python scripts used to retrieve and store status messages
+**/collection** contains python scripts used to retrieve and store status messages.
 
 **/exploration** visualizers, estimators
 
@@ -36,7 +36,7 @@ Can features besides content (latitude, longitude, user status counts, user foll
 ###Data Analysis
 
 Used a combination of features.
-Inputs of location (latitude, longitude, user status counts, user followers, user friends)
+Inputs of location (latitude, longitude, user status counts, user followers, user friends).
 Tried these estimators DecisionTrees, RandomTrees, ExtraTrees to predict this 'sentiment'
 
 
