@@ -17,6 +17,22 @@ import app_settings
 import sentiment
 
 
+class Hashtags(object):
+  def __init__(self, table='stream_sf_hashtags'):
+    self.db_engine = create_engine(app_settings.db_engine())
+    metadata = MetaData(self.db_engine)
+    super(Hashtags, self).__init__()
+    self.hashtags = Table(table, metadata, autoload=True)
+
+  def do_insert(self, hashtag, status_id, db_connxn):
+    db_connxn.execute(self.hashtags.insert(),
+                      status_id=status_id,
+                      hashtag=hashtag['text'],
+                      start=hashtag['indices'][0],
+                      end=hashtag['indices'][1]
+                      )
+
+
 class StreamData(object):
 
   def __init__(self, table='stream_sf'):
