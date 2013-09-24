@@ -17,16 +17,39 @@ import app_settings
 import sentiment
 
 
-class StreamData(object):
-
-  def __init__(self, table='stream_sf'):
+class BaseModel(object):
+  def __init__(self):
     self.db_engine = create_engine(app_settings.db_engine())
-    metadata = MetaData(self.db_engine)
-    super(StreamData, self).__init__()
-    self.tweets = Table(table, metadata, autoload=True)
+    self.metadata = MetaData(self.db_engine)
 
   def connection(self):
     return self.db_engine.connect()
+
+
+class Users(BaseModel):
+  def __init__(self, table='stream_sf_users'):
+    super(Users, self).__init__()
+    self.users = Table(table, self.metadata, autoload=True)
+
+
+class Hashtags(BaseModel):
+  def __init__(self, table='stream_sf_hashtags'):
+    super(Hashtags, self).__init__()
+    self.hashtags = Table(table, self.metadata, autoload=True)
+
+  def do_insert(self, hashtag, status_id, db_connxn):
+    db_connxn.execute(self.hashtags.insert(),
+                      status_id=status_id,
+                      hashtag=hashtag['text'],
+                      start=hashtag['indices'][0],
+                      end=hashtag['indices'][1]
+                      )
+
+
+class StreamData(BaseModel):
+  def __init__(self, table='stream_sf'):
+    super(StreamData, self).__init__()
+    self.tweets = Table(table, self.metadata, autoload=True)
 
   def format_geo_coords(self, geo):
     if str(geo).startswith('[['):
@@ -71,6 +94,7 @@ class StreamData(object):
     loc = self.format_geo_coords(geo)
     score = sentiment.score_sentiment(text)
     tweet_sentiment = score['positive matches'] - score['negative matches']
+    hashtag_count = len(status_msg['entities']['hashtags'])
 
     db_connxn.execute(self.tweets.insert(), text=text, lang=lang, status_id=status_id,
                       created=created, reply_to=reply_to,
@@ -96,7 +120,8 @@ class StreamData(object):
                       box_ne=loc['box_ne'],
                       box_nw=loc['box_nw'],
                       lat=loc['lat'],
-                      lng=loc['lng'])
+                      lng=loc['lng'],
+                      hashtag_count=hashtag_count)
 
 
 class Tweet(object):
@@ -110,17 +135,18 @@ class TweetData(object):
     super(TweetData, self).__init__()
     self.tweets = Table(table, metadata, autoload=True)
 
-  def loadSession():
-    db_engine = create_engine('mysql://root@localhost/ebs_tweets')
-    print 'create engine'
-    metadata = MetaData(db_engine)
-    print 'metadata', metadata
-    tweets_table = Table('sf_stream_again', metadata, autoload=True)
-    print 'table', tweets_table
-    mapper(Tweet, tweets_table)
-    print 'mapper'
-    Session = sessionmaker(bind=db_engine)
-    session = Session()
+  def loadSession(self):
+    # db_engine = create_engine('mysql://root@localhost/ebs_tweets')
+    # print 'create engine'
+    # metadata = MetaData(db_engine)
+    # print 'metadata', metadata
+    # tweets_table = Table('sf_stream_again', metadata, autoload=True)
+    # print 'table', tweets_table
+    # mapper(Tweet, tweets_table)
+    mapper(Tweet, self.tweets)
+    # print 'mapper'
+    Session = sessionmaker(bind=self.db_engine)
+    session = Session()[p''''''''        ]
     return session
 
   @contextmanager

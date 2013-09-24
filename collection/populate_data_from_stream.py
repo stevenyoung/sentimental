@@ -16,8 +16,10 @@ def main():
       try:
         status['text'] = status['text'].replace('\n', ' ')
         streamdata.do_insert(status, db_connxn)
+        print '%s : %s' % (status['user']['screen_name'], status['text'])
         for tag in status['entities']['hashtags']:
           hashtags.do_insert(tag, status['id'], db_connxn)
+          print '%s : %s' % (tag['text'], tag['indices'][0])
       except ValueError:
         print status['text']
         print status['lang']
