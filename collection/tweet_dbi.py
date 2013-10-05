@@ -146,7 +146,7 @@ class TweetData(object):
     mapper(Tweet, self.tweets)
     # print 'mapper'
     Session = sessionmaker(bind=self.db_engine)
-    session = Session()[p''''''''        ]
+    session = Session()
     return session
 
   @contextmanager
