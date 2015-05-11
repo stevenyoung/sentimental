@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Sentimental : Yet another micro-blogging sentiment analyzer">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Sentimental</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/stevenyoung/sentimental">View on GitHub</a>
+
+          <h1 id="project_title">Sentimental</h1>
+          <h2 id="project_tagline">Yet another micro-blogging sentiment analyzer</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/stevenyoung/sentimental/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/stevenyoung/sentimental/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p><strong>/collection</strong> contains python scripts used to retrieve and store status messages.</p>
+
+<p><strong>/exploration</strong> visualizers, estimators</p>
+
+<p><strong>/html</strong> contains D3 visualizations</p>
+
+<p><strong>/lexicons</strong> are the lexicons used in this version.</p>
+
+<p>(lexicons courtesy of <a href="http://www.cs.uic.edu/%7Eliub/FBS/sentiment-analysis.html">http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html</a>)</p>
+
+<p>Can a collective 'mood' be determined by the features available in the Twitter-verse?</p>
+
+<p>Collect status messages from Twitter's firehose and see.</p>
+
+<p>How to measure sentiment?
+Started with a very simple hypothesis:
+  Count 'nice' words and 'mean' words in a tweet and score the tweet.</p>
+
+<h3>
+<a id="data-extraction" class="anchor" href="#data-extraction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Data Extraction</h3>
+
+<p>Tweets are collected via Twitter's Stream API and stored to a database.
+Tweets are filtered by geo-located tweets inside a box bounded by latitude, longitude to include much of Northern California
+Collected about 400,000 status messages over the first ten days in September 2013.</p>
+
+<h3>
+<a id="data-exploration" class="anchor" href="#data-exploration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Data Exploration</h3>
+
+<p>Trial and error, various approaches to deal with things like unconventional text in status messages, languages, etc.
+Other irregularities: Location reported in various ways.</p>
+
+<h3>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h3>
+
+<p>Can features besides content (latitude, longitude, user status counts, user followers, user friends) be used to determine 'sentiment' score?</p>
+
+<h3>
+<a id="data-analysis" class="anchor" href="#data-analysis" aria-hidden="true"><span class="octicon octicon-link"></span></a>Data Analysis</h3>
+
+<p>Used a combination of features.
+Inputs of location (latitude, longitude, user status counts, user followers, user friends).
+Tried these estimators DecisionTrees, RandomTrees, ExtraTrees to predict this 'sentiment'</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Sentimental maintained by <a href="https://github.com/stevenyoung">stevenyoung</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
